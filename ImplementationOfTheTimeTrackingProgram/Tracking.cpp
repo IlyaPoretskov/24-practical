@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ctime>
 #include <iomanip>
+#include <vector>
 
 using namespace std;
 
@@ -11,25 +12,11 @@ struct task_info
     time_t end_time;
 };
 
-template < typename T >
-
-void add_to_array(T array[], T elem)
-{
-    int length = begin(array);
-
-    T newArray[length + 1];
-
-    for (int i = 0; i < length; i++)
-        newArray[i] = array[i];
-
-    newArray[length] = elem;
-    array = newArray;
-}
 
 int main()
 {
     string command = "";
-    task_info tasks[1];
+    vector<task_info> tasks;
     task_info current_task;
 
     while (true)
@@ -43,15 +30,15 @@ int main()
         else if (command == "begin")
         {
 
+            cout << "Input new task name: ";
+            cin >> current_task.name;
+
             if (current_task.name != "")
             {
                 current_task.end_time = time(nullptr);
-                add_to_array(tasks, current_task);
+                tasks.push_back(current_task);
                 current_task.name = "";
             }
-
-            cout << "Input new task name: ";
-            cin >> current_task.name;
 
             while (current_task.name == "")
             {
@@ -67,15 +54,15 @@ int main()
             if (current_task.name != "")
             {
                 current_task.end_time = time(nullptr);
-                add_to_array(tasks, current_task);
+                tasks.push_back(current_task);
                 current_task.name = "";
             }
         }
         else if (command == "status")
         {
-            for (int i = 0; i < sizeof(tasks); i++)
+            for (int i = 0; i < sizeof(tasks) / 48; i++)
             {
-                cout << current_task.name << ": ";
+                cout << tasks[i].name << ": ";
                 double d = difftime(current_task.start_time, current_task.end_time);
                 time_t temporaily = (time_t)d;
                 tm* gap = localtime(&temporaily);
