@@ -30,15 +30,17 @@ int main()
         else if (command == "begin")
         {
 
-            cout << "Input new task name: ";
-            cin >> current_task.name;
-
             if (current_task.name != "")
             {
                 current_task.end_time = time(nullptr);
                 tasks.push_back(current_task);
                 current_task.name = "";
             }
+
+            cout << "Input new task name: ";
+            cin >> current_task.name;
+
+            
 
             while (current_task.name == "")
             {
@@ -60,12 +62,13 @@ int main()
         }
         else if (command == "status")
         {
-            for (int i = 0; i < sizeof(tasks) / 48; i++)
+            for (int i = 0; i < tasks.size(); i++)
             {
                 cout << tasks[i].name << ": ";
-                double d = difftime(current_task.start_time, current_task.end_time);
+                double d = difftime(tasks[i].end_time, tasks[i].start_time);
                 time_t temporaily = (time_t)d;
                 tm* gap = localtime(&temporaily);
+                gap->tm_hour -= 5;               // В зависимости от часового пояса т.к localtime приводит в локальное время
                 cout << put_time(gap, "%H:%M:%S") << endl;
             }
             cout << current_task.name << endl;
